@@ -15,6 +15,7 @@ sphinx-autodoc-typehints = "*"
 sphinx-copybutton = "*"
 sphinx-autoapi = "*"
 sphinx2rst = "*"
+micropython-ssd1306py = "*"
 
 [dev-packages]
 

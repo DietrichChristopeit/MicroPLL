@@ -4,14 +4,15 @@ from ucollections import OrderedDict
 
 class StepMotor:
 
-    _phasePins: OrderedDict[str, Pin]
-
     def __init__(self, phasePinMap: OrderedDict[str, int]=None, base_freq: int=1_500, phase_cycle_freq: int=1, cycle_sentence: str='AABBBCCCDD', step_time_us: float=1.5):
         """
-
+        Lorem Ipsum
 
         :type phasePinMap: OrderedDict[str, int]
         """
+
+        self._phasePins: OrderedDict[str, Pin] = OrderedDict()
+
         if phasePinMap is None:
             self._phasePinMap: OrderedDict[str, int] = OrderedDict({'A': 16, 'B': 17, 'C': 18, 'D': 19})
         else:
