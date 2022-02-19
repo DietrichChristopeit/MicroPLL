@@ -1,5 +1,5 @@
 """
-    lib/epd_2in9ws_rp2.py
+    lib/ws_epd.py
     
 """
 # *****************************************************************************
@@ -83,14 +83,66 @@ class EPD_2in9(framebuf.FrameBuffer):
         self._spi: SPI = SPI(1)
         self._spi.init(baudrate=4000_000)
 
-
         self._buffer: bytearray = bytearray(self._height * self._width // 8)
         super().__init__(self._buffer, self._width, self._height, framebuf.MONO_HLSB)
         self.prepare_display()
         return
 
+    @property
+    def buffer(self) -> bytearray:
+        return self._buffer
+
+    @buffer.setter
+    def buffer(self, buf: bytearray):
+        self._buffer = buf
+
+    @property
+    def window(self) -> (int, int, int, int):
+        return self._window
+
+    @window.setter
+    def window(self, wdw: (int, int, int, int)):  # window = (x_start, y_start, x_end, y_end)
+        self._window = wdw
+        self.send_command(0x44)  # SET_RAM_X_ADDRESS_START_END_POSITION
+        # x point must be the multiple of 8 or the last 3 bits will be ignored
+        self.send_data((self._window[0] >> 3) & 0xFF)
+        self.send_data((self._window[2] >> 3) & 0xFF)
+        self.send_command(0x45)  # SET_RAM_Y_ADDRESS_START_END_POSITION
+        self.send_data(self._window[1] & 0xFF)
+        self.send_data((self._window[1] >> 8) & 0xFF)
+        self.send_data(self._window[3] & 0xFF)
+        self.send_data((self._window[3] >> 8) & 0xFF)
+        return
+
+    @property
+    def cursor(self) -> (int, int):
+        return self._cursor
+
+    @cursor.setter
+    def cursor(self, pos: (int, int)):
+        self._cursor = pos
+        self.send_command(0x4E)  # SET_RAM_X_ADDRESS_COUNTER
+        self.send_data(self._cursor[0] & 0xFF)
+
+        self.send_command(0x4F)  # SET_RAM_Y_ADDRESS_COUNTER
+        self.send_data(self._cursor[1] & 0xFF)
+        self.send_data((self._cursor[1] >> 8) & 0xFF)
+        self.wait_free()
+        return
+
     def spi_writebyte(self, data):
         self._spi.write(bytearray(data))
+        return
+
+    def on(self, partial: bool = False):
+        self.send_command(0x22)  # DISPLAY_UPDATE_CONTROL_2
+
+        if partial is not True:
+            self.send_data(0xF7)
+        else:
+            self.send_data(0x0F)
+        self.send_command(0x20)  # MASTER_ACTIVATION
+        self.wait_free()
         return
 
     def off(self):
@@ -126,17 +178,6 @@ class EPD_2in9(framebuf.FrameBuffer):
             sleep_ms(10)
         return
 
-    def on(self, partial: bool=False):
-        self.send_command(0x22) # DISPLAY_UPDATE_CONTROL_2
-
-        if partial is not True:
-            self.send_data(0xF7)
-        else:
-            self.send_data(0x0F)
-        self.send_command(0x20) # MASTER_ACTIVATION
-        self.wait_free()
-        return
-
     def send_lut(self):
         """The method sends all data provided to the e-paper-module.
 
@@ -145,48 +186,6 @@ class EPD_2in9(framebuf.FrameBuffer):
         self.send_command(0x32)
         for _ in range(0, 153):
             self.send_data(self._lut[_])
-        self.wait_free()
-        return
-
-    @property
-    def buffer(self) -> bytearray:
-        return self._buffer
-
-    @buffer.setter
-    def buffer(self, buf: bytearray):
-        self._buffer = buf
-
-    @property
-    def window(self) -> (int, int, int, int):
-        return self._window
-
-    @window.setter
-    def window(self, wdw: (int, int, int, int)):  # window = (x_start, y_start, x_end, y_end)
-        self._window = wdw
-        self.send_command(0x44) # SET_RAM_X_ADDRESS_START_END_POSITION
-        # x point must be the multiple of 8 or the last 3 bits will be ignored
-        self.send_data((self._window[0]>>3) & 0xFF)
-        self.send_data((self._window[2]>>3) & 0xFF)
-        self.send_command(0x45) # SET_RAM_Y_ADDRESS_START_END_POSITION
-        self.send_data(self._window[1] & 0xFF)
-        self.send_data((self._window[1] >> 8) & 0xFF)
-        self.send_data(self._window[3] & 0xFF)
-        self.send_data((self._window[3]>> 8) & 0xFF)
-        return
-
-    @property
-    def cursor(self) -> (int, int):
-        return self._cursor
-
-    @cursor.setter
-    def cursor(self, pos: (int, int)):
-        self._cursor = pos
-        self.send_command(0x4E) # SET_RAM_X_ADDRESS_COUNTER
-        self.send_data(self._cursor[0] & 0xFF)
-
-        self.send_command(0x4F) # SET_RAM_Y_ADDRESS_COUNTER
-        self.send_data(self._cursor[1] & 0xFF)
-        self.send_data((self._cursor[1] >> 8) & 0xFF)
         self.wait_free()
         return
 
@@ -208,7 +207,7 @@ class EPD_2in9(framebuf.FrameBuffer):
 
         self.window = (0, 0, self._width - 1, self._height - 1)
 
-        self.send_command(0x21) #  Display update control
+        self.send_command(0x21)  # Display update control
         self.send_data(0x00)
         self.send_data(0x80)
 
@@ -217,26 +216,29 @@ class EPD_2in9(framebuf.FrameBuffer):
         # EPD hardware init end
         return
 
-    def display_image(self, image):
+    def display_image(self, image: [int]):
+
         if image is None:
             return
 
-        self.send_command(0x24) # WRITE_RAM
+        self.send_command(0x24)  # WRITE_RAM
         for j in range(0, self._height):
             for i in range(0, int(self._width / 8)):
                 self.send_data(image[i + j * int(self._width / 8)])
         self.on()
         return
 
-    def display_base(self, image):
+    def display_base(self, image: [int]):
+
         if image is None:
             return
-        self.send_command(0x24) # WRITE_RAM
+
+        self.send_command(0x24)  # WRITE_RAM
         for j in range(0, self._height):
             for i in range(0, int(self._width / 8)):
                 self.send_data(image[i + j * int(self._width / 8)])
 
-        self.send_command(0x26) # WRITE_RAM
+        self.send_command(0x26)  # WRITE_RAM
         for j in range(0, self._height):
             for i in range(0, int(self._width / 8)):
                 self.send_data(image[i + j * int(self._width / 8)])
@@ -244,7 +246,8 @@ class EPD_2in9(framebuf.FrameBuffer):
         self.on()
         return
 
-    def on_partial(self, image):
+    def partial_on(self, image: [int]):
+
         if image is None:
             return
 
@@ -324,7 +327,7 @@ if __name__ == '__main__':
     for i in range(0, 10):
         epd.fill_rect(40, 270, 40, 10, 0xff)
         epd.text(str(i), 60, 270, 0x00)
-        epd.on_partial(epd.buffer)
+        epd.partial_on(epd.buffer)
 
     #epd.prepare_display()
     #epd.clear(0xff)

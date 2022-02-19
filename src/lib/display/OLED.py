@@ -4,7 +4,7 @@
 """
 from machine import Pin
 from machine import I2C
-from lib.ssd1306 import SSD1306_I2C
+from ssd1306 import SSD1306_I2C
 from time import sleep_ms
 
 class OLED(SSD1306_I2C):

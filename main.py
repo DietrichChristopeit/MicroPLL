@@ -1,9 +1,8 @@
-from machine import I2C
 from machine import Pin
 from machine import PWM
 from time import sleep_ms
 from math import exp, fabs
-from pipicoio.display.OLED import OLED
+from lib.display import OLED
 
 def operational(pin: int=25, pin1: int=27) -> (PWM, PWM):
     opp: Pin = Pin(pin, Pin.OUT)

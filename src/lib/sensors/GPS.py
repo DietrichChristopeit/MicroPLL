@@ -7,4 +7,5 @@ from machine import UART
 import time
 
 
-class GPS():
+class GPS:
+    pass

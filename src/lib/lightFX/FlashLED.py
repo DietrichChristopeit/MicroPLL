@@ -4,7 +4,7 @@
 """
 from machine import Pin
 
-from pipicoio.lightFX.Effect import Effect
+from lib.lightFX.Effect import Effect
 
 
 class FlashLED(Effect):
