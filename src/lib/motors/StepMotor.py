@@ -1,7 +1,20 @@
+"""
+    lib.StepMotor.py
+
+"""
 from machine import Pin
 from ucollections import OrderedDict
 
+"""This class enables the access of a Stepmotor.
 
+Additionally a motor Driver is needed that 
+    1. Facilitates an independent power source -- most motors require an input of 5V which can do serious harm to the Pi Pico.
+    
+        a. Make sure to guard the Pi Pico from currents caused by self induction that essentially gflow back into the Pi Pico. This can be done with a shunt
+    
+    2. Connect all cables -- depending on motor 3 or 4:
+        
+"""
 class StepMotor:
 
     def __init__(self, phasePinMap: OrderedDict[str, int]=None, base_freq: int=1_500, phase_cycle_freq: int=1, cycle_sentence: str='AABBBCCCDD', step_time_us: float=1.5):

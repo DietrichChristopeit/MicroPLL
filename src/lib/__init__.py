@@ -1,2 +1,4 @@
-from lib.display.ssd1306 import *
-from lib.display.ws_epd import *
+from display import *
+from lightFX import *
+from motors import *
+from sensors import *

@@ -2,15 +2,19 @@
     pipicoio.display.OLED
 
 """
-from machine import Pin
-from machine import I2C
-from ssd1306 import SSD1306_I2C
 from time import sleep_ms
 
+from machine import I2C
+from machine import Pin
+
+from ssd1306 import SSD1306_I2C
+
+
 class OLED(SSD1306_I2C):
-    def __init__(self, id: str='disp_0', init_text: str=None, x: int=0, y: int=0):
+
+    def __init__(self, id: str = 'disp_0', init_text: str = None, x: int = 0, y: int = 0):
         self._id: str = id
-        self._i2c_conn: I2C = I2C(0,sda=Pin(0), scl=Pin(1), freq=400_000)
+        self._i2c_conn: I2C = I2C(0, sda=Pin(0), scl=Pin(1), freq=400_000)
         super().__init__(128, 64, self._i2c_conn)
         self.fill(0)
         self._cur_text: str = None

@@ -1,10 +1,14 @@
-from machine import Pin
-from machine import PWM
+from math import exp
+from math import fabs
 from time import sleep_ms
-from math import exp, fabs
+
+from machine import PWM
+from machine import Pin
+
 from lib.display import OLED
 
-def operational(pin: int=25, pin1: int=27) -> (PWM, PWM):
+
+def operational(pin: int = 25, pin1: int = 27) -> (PWM, PWM):
     opp: Pin = Pin(pin, Pin.OUT)
     opp.off()
     pwmOKLED: PWM = PWM(opp)
@@ -24,10 +28,9 @@ def operational(pin: int=25, pin1: int=27) -> (PWM, PWM):
 
 
 if __name__ == '__main__':
-
     display: OLED = OLED()
 
-    #pwmOKLED, pwmOKLED1 = operational(28, 27)
-    #sleep_ms(500)
-    #pwmOKLED.duty_u16(150000)
-    #pwmOKLED1.duty_u16(150000)
+    # pwmOKLED, pwmOKLED1 = operational(28, 27)
+    # sleep_ms(500)
+    # pwmOKLED.duty_u16(150000)
+    # pwmOKLED1.duty_u16(150000)
