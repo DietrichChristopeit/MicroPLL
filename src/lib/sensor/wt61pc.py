@@ -2,7 +2,7 @@
     lib.sensor.wt61pc
 
 """
-
+from machine import Pin
 from micropython import const
 
 
@@ -35,7 +35,7 @@ class Accelerometer:
     
     def __init__(self, id: int = 0, tx: int = 16, rx: int = 17, baudrate: int = 9600):
         self._id: int = id
-        self._TX: int = tx
-        self._RX: int = rx
+        self._TX: Pin = Pin(tx)
+        self._RX: Pin = Pin(rx)
         self._BAUD: int = baudrate
         return
