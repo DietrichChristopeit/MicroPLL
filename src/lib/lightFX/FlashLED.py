@@ -1,5 +1,5 @@
 """
-    pipicoio.lightFX.FlashLED.py
+    lib.lightFX.FlashLED
 
 """
 from machine import Pin

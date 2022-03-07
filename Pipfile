@@ -16,6 +16,10 @@ sphinx-copybutton = "*"
 sphinx-autoapi = "*"
 sphinx2rst = "*"
 micropython-ssd1306py = "*"
+byte = "*"
+docutils = "*"
+pyparsing = "*"
+arrow = "*"
 
 [dev-packages]
 

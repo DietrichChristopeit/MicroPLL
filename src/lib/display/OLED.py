@@ -1,5 +1,5 @@
 """
-    pipicoio.display.OLED
+    lib.display.OLED
 
 """
 from time import sleep_ms
@@ -11,7 +11,7 @@ from ssd1306 import SSD1306_I2C
 
 
 class OLED(SSD1306_I2C):
-
+    
     def __init__(self, id: str = 'disp_0', init_text: str = None, x: int = 0, y: int = 0):
         self._id: str = id
         self._i2c_conn: I2C = I2C(0, sda=Pin(0), scl=Pin(1), freq=400_000)

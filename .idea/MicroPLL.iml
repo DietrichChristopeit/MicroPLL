@@ -10,6 +10,11 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/display" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/lightFX" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/motor" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/sensor" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

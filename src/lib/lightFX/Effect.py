@@ -1,5 +1,5 @@
 """
-    pipicoio.lightFX.Effect.py
+    lib.lightFX.Effect
 
 """
 from abc import ABC

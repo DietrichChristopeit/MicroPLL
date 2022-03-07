@@ -1,3 +1,6 @@
+"""
+    lib.display.ssd1306
+"""
 # MicroPython SSD1306 OLED driver, I2C and SPI interfaces
 from abc import ABC
 from abc import abstractmethod

@@ -1,5 +1,5 @@
 """
-    lib.StepMotor.py
+    lib.motor.StepMotor
 
 """
 from machine import Pin
@@ -8,7 +8,7 @@ from ucollections import OrderedDict
 """This class enables the access of a Stepmotor.
 
 Additionally a motor Driver is needed that 
-    1. Facilitates an independent power source -- most motors require an input of 5V which can do serious harm to the Pi Pico.
+    1. Facilitates an independent power source -- most motor require an input of 5V which can do serious harm to the Pi Pico.
     
         a. Make sure to guard the Pi Pico from currents caused by self induction that essentially gflow back into the Pi Pico. This can be done with a shunt
     

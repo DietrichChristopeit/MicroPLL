@@ -1,6 +1,5 @@
 """
-    lib/ws_epd.py
-    
+    lib.ws_epd
 """
 # *****************************************************************************
 # * | File        :	  Pico_ePaper-2.9.py
@@ -31,11 +30,10 @@
 # THE SOFTWARE.
 #
 
-from utime import sleep_ms
-
 import framebuf
 from machine import Pin
 from machine import SPI
+from utime import sleep_ms
 
 
 class EPD_2in9(framebuf.FrameBuffer):
